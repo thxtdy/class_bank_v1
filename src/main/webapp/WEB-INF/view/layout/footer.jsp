@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
-</head>
-<body>
+
+<!-- start of footer.jsp -->
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <p>Footer</p>
+</div>
 
 </body>
 </html>
+<!-- end of footer.jsp -->
