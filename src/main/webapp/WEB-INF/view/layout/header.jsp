@@ -38,7 +38,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<h2>About Me</h2>
-						<h5>Photo of me:</h5>
+						<h5>Photo of me: </h5>
 						<div class="m--profile"></div>
 						<p>코린이 개발을 위한 뱅크 앱</p>
 						<h3>Some Links</h3>
