@@ -20,7 +20,7 @@
 
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>My Bank</h1>
-  <p>MyBatis를 활용한 스프링 부트 앱 만들어보기</p> 
+  <p>MyBatis를 활용ㅐㅐ한 스프링 부트 앱 만들어보기</p>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
