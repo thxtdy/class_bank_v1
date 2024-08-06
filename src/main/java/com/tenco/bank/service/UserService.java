@@ -10,20 +10,19 @@ import com.tenco.bank.dto.SignUpDTO;
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.handler.exception.RedirectException;
 import com.tenco.bank.repository.interfaces.UserRepository;
-import com.tenco.bank.repository.model.User;
 
 @Service // Ioc 대상 (Singleton)
 public class UserService {
 	
 	// DI - 의존 주입
-	@Autowired // -> new 를 하지 않아도 이걸 쓰면 자동으로 heap 메모리 영역으로 올라감(객체 생성)
+	// @Autowired // -> new 를 하지 않아도 이걸 쓰면 자동으로 heap 메모리 영역으로 올라감(객체 생성)
 	private UserRepository userRepository;
 
-// @Autowired <- 이걸로 대체함.
-//	public UserService(UserRepository userRepository) {
-//		this.userRepository = userRepository;
-//	
-//	}
+    @Autowired
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	
+	}
 	
 	/**
 	 * 회원 등록 서비스 기능
