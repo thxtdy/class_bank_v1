@@ -12,11 +12,22 @@ spring:
       suffix: .jsp # 뷰 이름에 자동으로 추가될 파일 확장자를 설정
       
   datasource: 
+#    url: jdbc:mysql://localhost:3306/mybank?serverTimeZone=Asia/Seoul # 데이터 베이스 연결을 위한 URL 설정
+#    driver-class-name: com.mysql.cj.jdbc.Driver # 드라이버 클래스를 설정
+#    username: root # User ID
+#    password : asd123 # user Password 현재는 빈 문자열로 설정
     url: jdbc:h2:mem:bankdb;MODE=MySQL # 데이터 베이스 연결을 위한 URL 설정
     driver-class-name: org.h2.Driver # 드라이버 클래스를 설정
     username: sa # User ID
     password : '' # user Password 현재는 빈 문자열로 설정
-    
+  sql:
+    init:
+      schema-locations:
+      - classpath:db/table.sql
+      data-locations:
+      - classpath:db/data.sql
+      
+  
   h2: 
     console:
       enabled: true # H2 Database Console 활성화
