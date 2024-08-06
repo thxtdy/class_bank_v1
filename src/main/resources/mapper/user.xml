@@ -6,7 +6,7 @@
 	<!-- id는 매칭되어있는 인터페이스의 메소드 명과 같아야 한다. -->
 	<insert id="insert">
 		insert into user_tb(username, password, fullname, created_at)
-		values( #{username}, #{password}, #{fullname}, #{created_at} )
+		values( #{username}, #{password}, #{fullname}, now())
 	</insert>
 	
 	<update id="updateById">
