@@ -4,15 +4,15 @@
 <mapper namespace="com.tenco.bank.repository.interfaces.AccountRepository">
 	
 	<insert id="insert">
-		insert into account_tb(number, password, balance, created_at, user_id)
-		values( #{number}, #{password}, #{balance}, #{created_at}, #{user_id}, )
+		insert into account_tb(number, password, balance, user_id, created_at)
+		values( #{number}, #{password}, #{balance}, #{userId}, now() )
 	</insert>
 	
 	<update id="updateById">
 		update account_tb set number = #{number},
 							  password = #{password},
 							  balance = #{balance},
-							  user_id = #{user_id}
+							  user_id = #{userId}
 							  where id = #{id}
 	</update>
 	
