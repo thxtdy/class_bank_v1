@@ -7,18 +7,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.tenco.bank.dto.SignInDTO;
 import com.tenco.bank.dto.SignUpDTO;
 import com.tenco.bank.handler.exception.DataDeliveryException;
+import com.tenco.bank.repository.model.User;
 import com.tenco.bank.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller // IoC의 대상(Singleton)
 @RequestMapping("/user") // 대문처리
 public class UserController {
 	
-	@Autowired // DI 처리
 	private UserService userService;
+	private final HttpSession session;
 	
 	// 주석 처리해주는 것은 매너이다. 난 스윗한 사람이 되고 싶어.
+	
+	@Autowired // DI 처리
+	public UserController(UserService userService, HttpSession session) {
+		this.userService = userService;
+		this.session = session;
+	}
 	
 	/**
 	 * 회원 가입 페이지 요청
@@ -27,7 +37,6 @@ public class UserController {
 	 */
 	@GetMapping("/sign-up")
 	public String signUpPage() {
-		
 		// prefix: /WEB-INF/view/ 
 	    // suffix: .jsp 
 		return "user/signUp";
@@ -41,7 +50,7 @@ public class UserController {
 	 */
 	@PostMapping("/sign-up")
 	public String signUpProc(SignUpDTO dto) {
-		
+		System.out.println("test : " + dto.toString());
 		// Controller 에서 일반적인 코드 작업
 		// 1. 인증검사 (여기서는 인증검사 불필요)
 		// 2. 유효성 검사
@@ -60,7 +69,50 @@ public class UserController {
 		// 서비스 객체로 전달
 		userService.createuser(dto);
 		
+		return "redirect:/user/sign-in";
+	}
+	
+	/**
+	 * 로그인 화면 요청
+	 * 주소 설계 : http://localhost:8080/user/sign-in
+	 * @return
+	 */
+	@GetMapping("/sign-in")
+	public String signInPage() {
+
+		return "user/signIn";
+	}
+	
+	/**
+	 * 회원가입 요청 처리
+	 * 주소 설계 : http://localhost:8080/user/sign-in
+	 * @return
+	 */
+	@PostMapping("/sign-in")
+	public String signProc(SignInDTO dto) {
+		
+		if(dto.getUsername() == null || dto.getUsername().isEmpty()) {
+			throw new DataDeliveryException("유저 이름을 입력하세요.", HttpStatus.BAD_REQUEST);
+		}
+		
+		if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
+			throw new DataDeliveryException("비밀번호를 입력하세요.", HttpStatus.BAD_REQUEST);
+		}
+		// 서비스 호출
+		User principal = userService.readUser(dto);
+		
+		// 세션 메모리에 등록 처리
+		session.setAttribute("principal", principal);
+		
+		// 새로운 페이지로 이동 처리
+		// TODO 계좌 목록 페이지 이동 처리 예정
 		return "redirect:/index";
+	}
+	
+	@GetMapping("/logout")
+	public String logout() {
+		session.invalidate(); // Log Out !
+		return "redirect:/user/sign-in";
 	}
 	
 }
