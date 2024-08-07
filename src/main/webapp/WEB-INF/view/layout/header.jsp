@@ -1,11 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <title>myBank</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<<<<<<< HEAD
 <link rel="stylesheet" href="/css/common.css">
+=======
+<link rel="stylesheet" href="css/common.css">
+
+>>>>>>> 0edc2ad1ec7a82de9d8d2965bd151cd80183e383
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
@@ -16,13 +22,15 @@
 <body>
 	<div class="m--flex-container">
 		<div class="m--container">
-			<div class="jumbotron text-center m--banner-img" style="margin-bottom: 0">
+			<div class="jumbotron text-center m--banner-img"
+				style="margin-bottom: 0">
 				<h1>My Bank</h1>
 				<p>마이바이티스를 활용한 스프링 부트 앱 만들어보기</p>
 			</div>
 			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 				<a class="navbar-brand" href="#">Navbar</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<button class="navbar-toggler" type="button" data-toggle="collapse"
+					data-target="#collapsibleNavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="collapsibleNavbar">
