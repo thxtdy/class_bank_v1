@@ -12,6 +12,7 @@ import com.tenco.bank.dto.SignUpDTO;
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.repository.model.User;
 import com.tenco.bank.service.UserService;
+import com.tenco.bank.utils.Define;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -50,20 +51,19 @@ public class UserController {
 	 */
 	@PostMapping("/sign-up")
 	public String signUpProc(SignUpDTO dto) {
-		System.out.println("test : " + dto.toString());
 		// Controller 에서 일반적인 코드 작업
 		// 1. 인증검사 (여기서는 인증검사 불필요)
 		// 2. 유효성 검사
 		if(dto.getUsername() == null || dto.getUsername().isEmpty()) {
-			throw new DataDeliveryException("유저 이름을 입력하세요.", HttpStatus.BAD_REQUEST);
+			throw new DataDeliveryException(Define.ENTER_YOUR_USERNAME, HttpStatus.BAD_REQUEST);
 		}
 		
 		if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
-			throw new DataDeliveryException("비밀번호를 입력하세요.", HttpStatus.BAD_REQUEST);
+			throw new DataDeliveryException(Define.ENTER_YOUR_PASSWORD, HttpStatus.BAD_REQUEST);
 		}
 		
 		if(dto.getFullname() == null || dto.getFullname().isEmpty()) {
-			throw new DataDeliveryException("모든 이름을 입력하세요", HttpStatus.BAD_REQUEST);
+			throw new DataDeliveryException(Define.ENTER_YOUR_FULLNAME, HttpStatus.BAD_REQUEST);
 		}
 		
 		// 서비스 객체로 전달
@@ -84,7 +84,7 @@ public class UserController {
 	}
 	
 	/**
-	 * 회원가입 요청 처리
+	 * 로그인 요청 처리
 	 * 주소 설계 : http://localhost:8080/user/sign-in
 	 * @return
 	 */
@@ -92,21 +92,21 @@ public class UserController {
 	public String signProc(SignInDTO dto) {
 		
 		if(dto.getUsername() == null || dto.getUsername().isEmpty()) {
-			throw new DataDeliveryException("유저 이름을 입력하세요.", HttpStatus.BAD_REQUEST);
+			throw new DataDeliveryException(Define.ENTER_YOUR_USERNAME, HttpStatus.BAD_REQUEST);
 		}
 		
 		if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
-			throw new DataDeliveryException("비밀번호를 입력하세요.", HttpStatus.BAD_REQUEST);
+			throw new DataDeliveryException(Define.ENTER_YOUR_PASSWORD, HttpStatus.BAD_REQUEST);
 		}
 		// 서비스 호출
 		User principal = userService.readUser(dto);
 		
 		// 세션 메모리에 등록 처리
-		session.setAttribute("principal", principal);
+		session.setAttribute(Define.PRINCIPAL, principal);
 		
 		// 새로운 페이지로 이동 처리
 		// TODO 계좌 목록 페이지 이동 처리 예정
-		return "redirect:/index";
+		return "redirect:/account/list";
 	}
 	
 	@GetMapping("/logout")
