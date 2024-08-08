@@ -8,14 +8,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tenco.bank.dto.DepositDTO;
 import com.tenco.bank.dto.SaveDTO;
+import com.tenco.bank.dto.TransferDTO;
 import com.tenco.bank.dto.WithdrawalDTO;
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.handler.exception.RedirectException;
+import com.tenco.bank.handler.exception.UnAuthorizedException;
 import com.tenco.bank.repository.interfaces.AccountRepository;
 import com.tenco.bank.repository.interfaces.HistoryRepository;
 import com.tenco.bank.repository.model.Account;
 import com.tenco.bank.repository.model.History;
+import com.tenco.bank.repository.model.User;
 import com.tenco.bank.utils.Define;
 
 @Service
@@ -114,5 +118,77 @@ public class AccountService {
 		}
 		
 	}
-	
+	// 1. 계좌 조회
+	// 2. 계좌 명의 확인
+	// 3. 잔액 확인
+	// 4. 입금 처리
+	// 5. 거래 내역 남기기
+	@Transactional
+	public void updateAccountDeposit(DepositDTO dto, Integer id) {
+		Account accountEntity = accountRepository.findByNumber(dto.getDAccountNumber());
+		if (accountEntity == null) {
+			throw new DataDeliveryException(Define.NOT_EXIST_ACCOUNT, HttpStatus.BAD_REQUEST);
+		}
+		accountEntity.checkOwner(id);
+		accountEntity.deposit(dto.getAmount());
+		accountRepository.updateById(accountEntity);
+		
+		History history = new History();
+		history.setAmount(dto.getAmount());
+		history.setWBalance(null);
+		history.setDBalance(accountEntity.getBalance());
+		history.setWAccountId(null);
+		history.setDAccountId(accountEntity.getId());
+		
+		int result = historyRepository.insert(history);
+		if(result != 1) {
+			throw new DataDeliveryException(Define.FAILED_PROCESSING, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	/**
+	 * 이체 페이지 요청
+	 * @param dto
+	 * @param principalId
+	 * 1. 출금 계좌 존재 여부 확인 -- SELECT
+	 * 2. 입금 계좌 존재 여부 확인 -- SELECT
+	 * 3. 출금 계좌 본인 소유 확인 -- 객체의 상태값과 세션 ID 비교
+	 * 4. 출금 계좌 비밀번호 확인 -- 객체의 상태값과 DTO 값 비교
+	 * 5. 출금 계좌의 잔액 확인 -- 객체의 상태값과 DTO 값 비교
+	 * 6. 입금 계좌 객체 상태값 변경 처리 (잔액 + 거래금액)
+	 * 7. 입금 계좌 -- UPDATE
+	 * 8. 출금 계좌 객체 상태값 변경 처리 (잔액 - 거래금액)
+	 * 9. 출금 계좌 -- UPDATE
+	 * 10. 거래 내역 등록 처리
+	 * 11. 트랜잭션 처리
+	 */
+	@Transactional
+	public void updateAccountTransfer(TransferDTO dto, Integer principalId) {
+		Account dAccountEntity = accountRepository.findByNumber(dto.getDAccountNumber());
+		Account wAccountEntity = accountRepository.findByNumber(dto.getWAccountNumber());
+		if (dAccountEntity == null || wAccountEntity == null) {
+			throw new DataDeliveryException(Define.NOT_EXIST_ACCOUNT, HttpStatus.BAD_REQUEST);
+		}
+		
+		wAccountEntity.checkOwner(principalId);
+		wAccountEntity.checkPassword(dto.getPassword());
+		wAccountEntity.checkBalance(dto.getAmount());
+		wAccountEntity.withdraw(dto.getAmount());
+		accountRepository.updateById(wAccountEntity);
+		
+		dAccountEntity.deposit(dto.getAmount());
+		accountRepository.updateById(dAccountEntity);
+		
+		History history = History.builder()
+				.amount(dto.getAmount())
+				.wBalance(wAccountEntity.getBalance())
+				.dBalance(dAccountEntity.getBalance())
+				.wAccountId(principalId)
+				.dAccountId(dAccountEntity.getId())
+				.build();
+		int result = historyRepository.insert(history);
+		if(result != 1) {
+			throw new DataDeliveryException(Define.FAILED_PROCESSING, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
