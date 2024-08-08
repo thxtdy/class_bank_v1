@@ -1,5 +1,7 @@
 package com.tenco.bank.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -24,15 +26,15 @@ public class AccountService {
 	/**
 	 * 계좌 생성 기능
 	 * @param dto
-	 * @param userId
+	 * @param principal
 	 */
 	@Transactional
-	public void createAccount(SaveDTO dto, Integer userId) {
+	public void createAccount(SaveDTO dto, Integer principal) {
 		
 		int resultValue = 0;
 
 		try {
-			resultValue = accountRepository.insert(dto.toAccount(userId));
+			resultValue = accountRepository.insert(dto.toAccount(principal));
 		} catch (DataAccessException e) {
 			throw new DataDeliveryException("중복된 명의의 계좌를 개설할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
@@ -43,6 +45,24 @@ public class AccountService {
 			throw new DataDeliveryException("계좌 개설 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+	}
+	/**
+	 * 계좌 목록 보기 기능
+	 * @param principal
+	 * @return
+	 */
+	public List<Account> readAccountListByUserId(Integer userId) {
+		List<Account> accountListEntity = null;
+		
+		try {
+			accountListEntity = accountRepository.findByUserId(userId);
+		} catch (DataAccessException e) {
+			throw new DataDeliveryException("잘못된 처리입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			throw new DataDeliveryException("나도 알 수 없는 에러입니다.", HttpStatus.SERVICE_UNAVAILABLE);
+		}
+		
+		return accountListEntity;
 	}
 	
 }
