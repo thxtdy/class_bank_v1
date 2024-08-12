@@ -2,6 +2,8 @@ package com.tenco.bank.repository.model;
 
 import java.sql.Timestamp;
 
+import com.tenco.bank.utils.ValueFormatter;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

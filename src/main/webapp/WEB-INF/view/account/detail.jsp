@@ -8,15 +8,15 @@
 	<h2>계좌 상세 보기(인증)</h2>
 	<h5>Bank App에 오신걸 환영합니다</h5>
 	
-	<div class="bg-light p-md5">
-		<div class="user-box">
-			${principal.username}<br> 계좌번호 : ${account.number}<br> 잔액 : ${account.balance}원
+	<div class="bg-light p-md-5">
+		<div class="user--box">
+			${principal.username}<br> 계좌번호 : ${account.number}<br> 잔액 : ${account.formatKoreanWon(account.balance)}
 		</div>
 		<br>
 		<div>
-			<a href="/account/detail/1?type=all" class ="btn btn-outline-primary">전체</a>&nbsp;
-			<a href="/account/detail/1?type=deposit" class ="btn btn-outline-primary">입금</a>&nbsp;
-			<a href="/account/detail/1?type=withdrawal" class ="btn btn-outline-primary">출금</a>&nbsp;
+			<a href="/account/detail/${account.id}?type=all" class ="btn btn-outline-primary">전체</a>&nbsp;
+			<a href="/account/detail/${account.id}?type=deposit" class ="btn btn-outline-primary">입금</a>&nbsp;
+			<a href="/account/detail/${account.id}?type=withdrawal" class ="btn btn-outline-primary">출금</a>&nbsp;
 		</div>
 		<table class="table table-striped">
 			<thead>
@@ -29,13 +29,13 @@
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="history" items ="${historyList}">
+			<c:forEach var="historyAccount" items ="${historyList}">
 				<tr>
-					<th>${history.createdAt}</th>
-					<th>${history.sender}</th>			
-					<th>${history.receiver}</th>
-					<th>${history.amount}</th>			
-					<th>${history.balance}</th>			
+					<th>${historyAccount.timestampToString(historyAccount.createdAt)}</th>
+					<th>${historyAccount.sender}</th>			
+					<th>${historyAccount.receiver}</th>
+					<th>${historyAccount.formatKoreanWon(historyAccount.amount)}</th>			
+					<th>${historyAccount.formatKoreanWon(historyAccount.balance)}</th>			
 				</tr>
 				</c:forEach>
 			</tbody>

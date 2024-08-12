@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.utils.Define;
+import com.tenco.bank.utils.ValueFormatter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Account {
+public class Account extends ValueFormatter{
 
 	private Integer id;
 	private String number;
@@ -58,6 +59,5 @@ public class Account {
 			throw new DataDeliveryException(Define.NOT_ACCOUNT_OWNER, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
+
 }

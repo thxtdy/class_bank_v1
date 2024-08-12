@@ -216,7 +216,7 @@ public class AccountService {
 	 * @return 전체, 입금, 출금 거래 내역 3가지 타입 반환 (HistoryAccount list)
 	 */
 	@Transactional
-	public List<HistoryAccount> readHistoryByAccountId(@Param("type")String type, @Param("accountId") Integer accountId) {
+	public List<HistoryAccount> readHistoryByAccountId(String type, Integer accountId) {
 		List<HistoryAccount> list = new ArrayList<>();
 		list = historyRepository.findByAccountIdAndTypeOfHistory(type, accountId);
 		return list;
