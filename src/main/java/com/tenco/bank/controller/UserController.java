@@ -1,11 +1,24 @@
 package com.tenco.bank.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tenco.bank.dto.SignInDTO;
 import com.tenco.bank.dto.SignUpDTO;
@@ -71,6 +84,39 @@ public class UserController {
 		
 		return "redirect:/user/sign-in";
 	}
+	
+	@GetMapping("/kakao")
+	public ResponseEntity<?> codeTest(@RequestParam("code") String code) {
+
+		URI uri = UriComponentsBuilder
+				.fromUriString("https://kauth.kakao.com/oauth/token")
+				.build()
+				.toUri();
+		System.out.println("CODE : CODE  : " + code);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("grant_type", "authorization_code");
+		params.add("client_id", "7a81e9291d6290d4715bd26635e4af2b");
+		params.add("redirect_uri", "http://localhost:8080/user/kakao");
+		params.add("code", code);
+		
+		HttpEntity<MultiValueMap<String, String>> requestEntity
+			= new HttpEntity<>(params, headers);
+		
+		ResponseEntity<String> response
+		= restTemplate.exchange(uri, HttpMethod.POST, requestEntity, String.class);
+		System.out.println("헤더 : " + response.getHeaders());
+		System.out.println("바디 : " + response.getBody());
+		
+		return response;
+	}
+	
+	
 	
 	/**
 	 * 로그인 화면 요청
