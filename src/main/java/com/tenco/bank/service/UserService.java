@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,8 @@ public class UserService {
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
 	
+	@Value("${file.upload-dir}")
+	private String uploadDir;
 	
 	/**
 	 * 회원 등록 서비스 기능
@@ -125,12 +128,19 @@ public class UserService {
 		
 		// TODO - 초급 개발자들이 맨날 빼 먹는 코드 기억하긩
 		// 서버 컴퓨터에 파일을 넣을 디렉토리가 있는지 검사!!!
-		// 서버 컴퓨터에 파일을 넣을 디렉토리가 있는지 검사 
-		String saveDirectory = Define.UPLOAD_FILE_DIRECTORY;
-		File directory = new File(saveDirectory);
-		if(!directory.exists()) {
-			directory.mkdirs();
-		}
+//		String saveDirectory = Define.UPLOAD_FILE_DIRECTORY;
+//		System.out.println("uploadDir : " + uploadDir);
+//		File directory = new File(saveDirectory);
+//		if(!directory.exists()) {
+//			directory.mkdirs();
+//		}
+		
+		// 코드 수정 8/14
+		// File - getAbsolutePath() : 파일 시스템의 절대 경로를 나타낸다
+		// Linux 또는 MacOS에 맞춰서 절대 경로를 생성할 수 있다.
+//		String saveDirectory = new File(uploadDir).getAbsolutePath();
+		String saveDirectory = uploadDir;
+		System.out.println("SaveDirectory : " + saveDirectory);
 		
 		// 파일 이름 생성(중복 이름 예방) 
 		String uploadFileName = UUID.randomUUID() + "_" + mFile.getOriginalFilename();

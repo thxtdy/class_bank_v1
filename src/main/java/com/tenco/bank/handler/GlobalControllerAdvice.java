@@ -17,13 +17,13 @@ public class GlobalControllerAdvice {
 	 * 방식(System.out.println), @slf4j (비동기적 방식)
 	 */
 
-	@ExceptionHandler(Exception.class) // 예외 잡기
-	public void exception(Exception e) {
-		System.out.println("==============================");
-		System.out.println(e.getClass().getName()); // 예외 클래스를 알기 위함
-		System.out.println(e.getMessage());
-		System.out.println("==============================");
-	}
+//	@ExceptionHandler(Exception.class) // 예외 잡기
+//	public void exception(Exception e) {
+//		System.out.println("==============================");
+//		System.out.println(e.getClass().getName()); // 예외 클래스를 알기 위함
+//		System.out.println(e.getMessage());
+//		System.out.println("==============================");
+//	}
 
 	// 예외를 내릴 때 데이터를 내리고 싶다면
 	// 1. @RestControllerAdvice
