@@ -45,19 +45,18 @@ public class UserService {
 	 */
 	@Transactional // 트랜잭션 처리는 반드시 습관화
 	public void createuser(SignUpDTO dto) {
-		System.out.println(dto.getMFile().getOriginalFilename());
-		if(!dto.getMFile().isEmpty()) {
+		int result = 0;
+
+		if(dto.getMFile() != null && !dto.getMFile().isEmpty()) {
 			String[] fileNames = uploadFile(dto.getMFile());
 			dto.setOriginFileName(fileNames[0]);
 			dto.setUploadFileName(fileNames[1]);
 			
 		}
-		int result = 0;
 		try {
 			// 코드 추가 부분
 			// 회원 가입 요청 시 사용자가 던진 비밀번호 값을 암호화 처리 해야 함
 			String hashPwd = passwordEncoder.encode(dto.getPassword());
-			System.out.println("Hashed : " + hashPwd);
 			dto.setPassword(hashPwd);
 			result = userRepository.insert(dto.toUser());
 		} catch (DataAccessException e) {
@@ -161,4 +160,15 @@ public class UserService {
 		
 		return new String[] {mFile.getOriginalFilename(), uploadFileName}; 
 	}
+	/**
+	 * username 사용자 존재 여부 조회
+	 * @param SignUpDTO
+	 * @return User, null
+	 */
+	public User searchUsername(String username) {
+		
+		return userRepository.findByUsername(username);
+		
+	}
+	
 }

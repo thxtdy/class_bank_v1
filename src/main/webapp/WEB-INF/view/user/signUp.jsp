@@ -33,7 +33,7 @@
 			<img alt="" src="/images/kakaoLogin.png"></a>
 		</div>
 	</form>
-
+	
 </div>
 <!-- end of col-sm-8  -->
 </div>
